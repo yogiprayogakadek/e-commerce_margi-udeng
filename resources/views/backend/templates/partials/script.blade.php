@@ -10,4 +10,5 @@
 <script src="{{asset('assets/main/libs/sweetalert2/sweetalert2.min.js')}}"></script>
 <script src="{{asset('assets/main/functions/main.js')}}"></script>
 <script src="{{asset('assets/main/functions/print/main.js')}}"></script>
+
 @stack('script')
