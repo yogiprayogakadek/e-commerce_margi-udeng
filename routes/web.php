@@ -10,6 +10,13 @@ Route::namespace('Landing')->group(function() {
         ->group(function() {
             Route::get('/', 'index')->name('index');
             Route::get('/detail-produk/{produk_id}', 'detailProduk')->name('detail.produk');
+
+            Route::prefix('post')
+                ->as('post.')
+                ->group(function() {
+                    Route::get('/{produk_id}', 'post')->name('index');
+                    Route::post('/detail-by-size', 'postBySize')->name('by.size');
+                });
         });
 });
 

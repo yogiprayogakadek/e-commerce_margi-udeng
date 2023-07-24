@@ -31,5 +31,6 @@
 
     <!-- Style CSS -->
     <link rel="stylesheet" href="{{ asset('assets/landing/css/style.css') }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
 </head>

@@ -1,6 +1,88 @@
 @extends('landing.templates.master')
 
 @section('content')
+    <!--== Start Hero Area Wrapper ==-->
+    <section class="hero-slider-area position-relative">
+        <div class="swiper hero-slider-container">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide hero-slide-item">
+                    <div class="container">
+                        <div class="row align-items-center position-relative">
+                            <div class="col-12 col-sm-6">
+                                <div class="hero-slide-content">
+                                    <div class="hero-slide-shape-img"><img
+                                            src="{{ asset('assets/landing/images/slider/shape1.png') }}" width="180"
+                                            height="180" alt="Image"></div>
+                                    <h4 class="hero-slide-sub-title">HURRY UP!</h4>
+                                    <h1 class="hero-slide-title">Let’s find your fashion outfit.</h1>
+                                    <p class="hero-slide-desc">Lorem Ipsum is simply dummy text of the printing
+                                        and typesetting industry. Lorem Ipsum has been the industry.</p>
+                                    <div class="hero-slide-meta">
+                                        <a class="btn btn-border-primary" href="shop.html">Shop Now</a>
+                                        <a class="ht-popup-video" data-fancybox data-type="iframe"
+                                            href="https://player.vimeo.com/video/172601404?autoplay=1">
+                                            <i class="fa fa-play icon"></i>
+                                            <span>Play Now</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="hero-slide-thumb">
+                                    <img src="{{ asset('assets/landing/images/slider/slider1.png') }}" width="555"
+                                        height="550" alt="Image">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hero-social">
+                            <a href="https://www.facebook.com/" target="_blank" rel="noopener">fb</a>
+                            <a href="https://www.twitter.com/" target="_blank" rel="noopener">tw</a>
+                            <a href="https://www.linkedin.com/" target="_blank" rel="noopener">in</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide hero-slide-item">
+                    <div class="container">
+                        <div class="row align-items-center position-relative">
+                            <div class="col-12 col-sm-6">
+                                <div class="hero-slide-content">
+                                    <div class="hero-slide-shape-img"><img
+                                            src="{{ asset('assets/landing/images/slider/shape1.png') }}" width="180"
+                                            height="180" alt="Image"></div>
+                                    <h4 class="hero-slide-sub-title">HURRY UP!</h4>
+                                    <h2 class="hero-slide-title">Let’s find your fashion outfit.</h2>
+                                    <p class="hero-slide-desc">Lorem Ipsum is simply dummy text of the printing
+                                        and typesetting industry. Lorem Ipsum has been the industry.</p>
+                                    <div class="hero-slide-meta">
+                                        <a class="btn btn-border-primary" href="shop.html">Shop Now</a>
+                                        <a class="ht-popup-video" data-fancybox data-type="iframe"
+                                            href="https://player.vimeo.com/video/172601404?autoplay=1">
+                                            <i class="fa fa-play icon"></i>
+                                            <span>Play Now</span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-6">
+                                <div class="hero-slide-thumb">
+                                    <img src="{{ asset('assets/landing/images/slider/slider1-man2.png') }}" width="555"
+                                        height="550" alt="Image">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hero-social">
+                            <a href="https://www.facebook.com/" target="_blank" rel="noopener">fb</a>
+                            <a href="https://www.twitter.com/" target="_blank" rel="noopener">tw</a>
+                            <a href="https://www.linkedin.com/" target="_blank" rel="noopener">in</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--== Add Pagination ==-->
+            <div class="hero-slider-pagination"></div>
+        </div>
+    </section>
+    <!--== End Hero Area Wrapper ==-->
     <!--== Start Product Banner Area Wrapper ==-->
     <section class="product-banner-area section-top-space">
         <div class="container">
@@ -37,7 +119,7 @@
                     <div class="col-sm-6 col-lg-4 mb-6">
                         <!--== Start Product Item ==-->
                         <div class="product-item product-item-border">
-                            <a class="product-thumb" href="shop-single-product.html">
+                            <a class="product-thumb" href="{{ route('landing.post.index', $value->id) }}">
                                 <img src="{{ asset($value->foto) }}" width="300" height="286" alt="Image-HasTech">
                             </a>
                             {{-- <span class="badges">New</span> --}}
@@ -143,7 +225,7 @@
 @endsection
 
 @push('script')
-    <script src="{{asset('assets/main/functions/main.js')}}"></script>
+    <script src="{{ asset('assets/main/functions/main.js') }}"></script>
     <script>
         function assets(url) {
             var url = '{{ url('') }}/' + url;
@@ -192,10 +274,11 @@
                 $('.product-details-desc').text(data.produk.deskripsi)
                 $('.new-price').text(convertToRupiah(data.harga[0]))
                 $('.product-details-color-list').empty().append('<h4>Size:</h4>');
-                $.each(data.size, function (index, value) {
+                $.each(data.size, function(index, value) {
                     let size = '<div class="color-list-check">' +
-                                    '<label class="form-check-label" for="colorLista'+index+'">'+value+'</label>' +
-                                '</div>';
+                        '<label class="form-check-label" for="colorLista' + index + '">' + value +
+                        '</label>' +
+                        '</div>';
                     $('.product-details-color-list').append(size);
                 });
             });
