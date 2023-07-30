@@ -60,7 +60,7 @@ function retnum(str) {
 function getCart() {
     $.ajax({
         type: "get",
-        url: "/cart",
+        url: "/cart/render",
         dataType: "json",
         success: function (response) {
             $(".cart-render").html(response.data);
@@ -72,9 +72,9 @@ function getCart() {
 }
 
 $(document).ready(function () {
-    // getCart();
+    getCart();
 
-    $("body").on("click", ".btn-hapus-item", function () {
+    $("body").on("click", ".btn-remove-item", function () {
         var id = $(this).data("id");
         Swal.fire({
             title: "Anda yakin?",
@@ -88,11 +88,12 @@ $(document).ready(function () {
         }).then((result) => {
             if (result.value) {
                 $.ajax({
-                    url: "/keranjang/remove/" + id,
+                    url: "/cart/remove/" + id,
                     type: "GET",
                     success: function (result) {
                         Swal.fire(result.title, result.message, result.status);
                         getCart();
+                        $("body").find(".item-total").text(result.cartTotal);
                     },
                 });
             }

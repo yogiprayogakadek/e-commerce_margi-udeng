@@ -28,6 +28,8 @@
     <link rel="stylesheet" href="{{ asset('assets/landing/css/plugins/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/landing/css/plugins/fancybox.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/landing/css/plugins/nice-select.css') }}">
+    <!-- Sweetalert2 -->
+    <link rel="stylesheet" href="{{asset('assets/main/libs/sweetalert2/sweetalert2.min.css')}}">
 
     <!-- Style CSS -->
     <link rel="stylesheet" href="{{ asset('assets/landing/css/style.css') }}">

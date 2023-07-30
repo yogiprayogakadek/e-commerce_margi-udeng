@@ -93,13 +93,13 @@
                         <div class="product-details-pro-qty">
                             <h4>QTY :</h4>
                             <div class="pro-qty">
-                                <input type="text" title="Quantity" value="1" min="1">
+                                <input type="text" title="Quantity" value="1" min="1" name="qty">
                             </div>
                         </div>
                         <div class="product-details-price"></div>
                         <div class="product-details-action">
-                            <button type="button" class="product-action-btn" data-bs-toggle="modal"
-                                data-bs-target="#action-CartAddModal">Add to cart</button>
+                            <button type="button" class="product-action-btn add-button"
+                                data-auth="{{ Auth::check() == true ? 'logged' : 'not-logged' }}">Add to cart</button>
                             {{-- <button type="button" class="product-action-wishlist" data-bs-toggle="modal" data-bs-target="#action-WishlistModal">
                                 <i class="fa fa-heart"></i>
                             </button> --}}
@@ -267,5 +267,48 @@
                 },
             });
         });
+
+        $('body').on('click', '.add-button', function() {
+            let auth = $(this).data('auth');
+            if (auth != 'logged') {
+                Swal.fire(
+                    'Info',
+                    'Mohon login untuk menambahkan ke keranjang',
+                    'info'
+                );
+                return false;
+            }
+            $.ajaxSetup({
+                headers: {
+                    "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                },
+            });
+            Swal.fire({
+                title: "Tambahkan belanjaan",
+                text: "Tambahkan ke dalam keranjang belanja?",
+                icon: "success",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Ya, tambahkan!",
+            }).then((result) => {
+                if (result.value) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/cart/add",
+                        data: {
+                            produk_id: localStorage.getItem('produk_id'),
+                            size: localStorage.getItem('size'),
+                            qty: $('input[name=qty]').val()
+                        },
+                        success: function(response) {
+                            Swal.fire(response.title, response.message, response.status);
+                            getCart();
+                            $('body').find('.item-total').text(response.cartTotal)
+                        },
+                    });
+                }
+            });
+        })
     </script>
 @endpush

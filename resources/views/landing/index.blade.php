@@ -207,8 +207,7 @@
                                         <span style="font-size: 10px">(mulai dari)</span>
                                     </div>
                                     <div class="product-details-action">
-                                        <button type="button" class="product-action-btn" data-bs-toggle="modal"
-                                            data-bs-target="#action-CartAddModal">Detail</button>
+                                        <button type="button" class="product-action-btn detail-button">Detail</button>
                                         {{-- <button type="button" class="product-action-wishlist" data-bs-toggle="modal"
                                             data-bs-target="#action-WishlistModal">
                                             <i class="fa fa-heart"></i>
@@ -233,6 +232,7 @@
         }
         $('body').on('click', '.btn-modal', function() {
             let produk_id = $(this).data('id');
+            localStorage.setItem('produk_id', produk_id);
             $('#modal').modal('show');
 
             $.get("/detail-produk/" + produk_id, function(data) {
@@ -282,6 +282,11 @@
                     $('.product-details-color-list').append(size);
                 });
             });
+        });
+
+        $('body').on('click', '.detail-button', function() {
+            let produk_id = localStorage.getItem('produk_id')
+            window.location = '/post/'+produk_id
         });
     </script>
 @endpush

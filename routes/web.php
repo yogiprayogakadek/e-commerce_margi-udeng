@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 
 // LANDING PAGE
@@ -18,10 +17,28 @@ Route::namespace('Landing')->group(function() {
                     Route::post('/detail-by-size', 'postBySize')->name('by.size');
                 });
         });
+
+    Route::controller(CartController::class)
+        ->prefix('/cart')
+        ->as('cart.')
+        ->group(function() {
+            Route::post('/add', 'addToCart')->name('add');
+            Route::get('/render', 'render')->name('render');
+            Route::get('/remove/{cart_id}', 'remove')->name('remove');
+            Route::get('/detail/{user_id}', 'detail')->name('detail');
+        });
+
+    Route::controller(ShoppingCartController::class)
+        ->prefix('/shopping-cart')
+        ->as('shopping.cart.')
+        ->group(function() {
+            Route::get('/index', 'index')->name('index');
+            Route::get('/remove-item/{cart_id}', 'removeItem')->name('remove.item');
+        });
 });
 
 // ADMIN PAGE
-Route::namespace('Main')->group(function() {
+Route::middleware(['auth', 'checkRole:admin'])->namespace('Main')->group(function() {
     Route::controller(DashboardController::class)
         ->prefix('dashboard')
         ->as('dashboard.')
@@ -64,6 +81,16 @@ Route::namespace('Main')->group(function() {
                     Route::post('/update', 'dataUpdate')->name('update');
                     Route::post('/delete', 'dataDelete')->name('delete');
                 });
+        });
+});
+
+Route::middleware('guest')->namespace('Main')->group(function () {
+    Route::controller(SignupController::class)
+        ->prefix('signup')
+        ->as('signup.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::post('/', 'signup')->name('signup');
         });
 });
 
