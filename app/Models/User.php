@@ -27,4 +27,9 @@ class User extends Authenticatable
         }
         return null;
     }
+
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class, 'id', 'user_id');
+    }
 }

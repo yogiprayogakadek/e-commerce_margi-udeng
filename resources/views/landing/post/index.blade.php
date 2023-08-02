@@ -240,6 +240,7 @@
 
 @push('script')
     <script>
+        localStorage.clear();
         $('body').on('click', '#btn-size', function() {
             let size = $(this).data('size');
             let produk_id = $(this).data('produk-id');
@@ -305,6 +306,8 @@
                             Swal.fire(response.title, response.message, response.status);
                             getCart();
                             $('body').find('.item-total').text(response.cartTotal)
+                            localStorage.clear();
+                            $('input[name="flexRadioSizeList"]').prop("checked", false);
                         },
                     });
                 }

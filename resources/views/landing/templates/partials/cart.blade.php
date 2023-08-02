@@ -1,5 +1,6 @@
 <ul>
-    @forelse ($cart as $c)
+    @if (Auth::check())
+    @foreach ($cart as $c)
         <li class="single-product-cart">
             <div class="cart-img">
                 <a href="{{ route('landing.post.index', $c->associatedModel['id']) }}"><img
@@ -17,12 +18,13 @@
                 </button>
             </div>
         </li>
-    @empty
-        <h3 class="text-center">Tidak ada produk</h3>
-    @endforelse
+    @endforeach
+    @else
+    <h3 class="text-center">Tidak ada produk</h3>
+    @endif
 </ul>
 
-@if (count(cart()) > 0)
+@if (count($cart) > 0)
     <div class="cart-total">
         <h4>Subtotal: <span>{{cartSubTotal()}}</span></h4>
     </div>

@@ -23,7 +23,7 @@ class CartController extends Controller
     {
         $view = [
             'data' => view('landing.templates.partials.cart')->with([
-                'cart' => cart()
+                'cart' => (Auth::check() == true ? cart() : [])
             ])->render()
         ];
 

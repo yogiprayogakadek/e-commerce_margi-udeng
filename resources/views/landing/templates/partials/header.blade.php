@@ -81,7 +81,7 @@
                         </button>
                     </form>
                     <button class="header-action-cart" type="button" data-bs-toggle="offcanvas"
-                        data-bs-target="#offcanvasWithCartSidebar" aria-controls="offcanvasWithCartSidebar"> <span class="item-total">{{count(cart()) ?? 0}}</span> Items
+                        data-bs-target="#offcanvasWithCartSidebar" aria-controls="offcanvasWithCartSidebar"> <span class="item-total">{{Auth::check() == true ? count(cart()) : 0}}</span> Items
                         <span class="cart-icon">
                             <svg width="21" height="21" viewBox="0 0 21 21" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">

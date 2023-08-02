@@ -105,7 +105,7 @@
                         </div>
                     </div>
                     <div class="grand-total-btn">
-                        <a class="btn btn-link" href="shop-checkout.html">Proceed to checkout</a>
+                        <a class="btn btn-link btn-checkout" href="javascript:void(0)">Proceed to checkout</a>
                     </div>
                 </div>
             </div>

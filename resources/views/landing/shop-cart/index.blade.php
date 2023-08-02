@@ -46,7 +46,8 @@
                                         @forelse (cart() as $cart)
                                             <tr>
                                                 <td class="product-thumbnail">
-                                                    <a href="{{ route('landing.post.index', $cart->associatedModel['id']) }}"><img
+                                                    <a
+                                                        href="{{ route('landing.post.index', $cart->associatedModel['id']) }}"><img
                                                             class="w-100" src="{{ asset($cart->attributes['foto']) }}"
                                                             alt="Image" width="85" height="85"></a>
                                                 </td>
@@ -67,14 +68,17 @@
                                                     </div>
                                                 </td>
                                                 <td class="product-total">
-                                                    <span>{{ toRupiah($cart->quantity * $cart->price) }}</span></td>
+                                                    <span>{{ toRupiah($cart->quantity * $cart->price) }}</span>
+                                                </td>
                                                 <td class="product-remove"><a href="javascript:void(0);" class="remove-item"
                                                         data-id="{{ $cart->id }}"><i class="fa fa-trash-o"></i></a></td>
                                             </tr>
                                         @empty
-                                        <tr>
-                                            <td colspan="7" class="text-center"><h3>Tidak ada produk</h3></td>
-                                        </tr>
+                                            <tr>
+                                                <td colspan="7" class="text-center">
+                                                    <h3>Tidak ada produk</h3>
+                                                </td>
+                                            </tr>
                                         @endforelse
                                     </tbody>
                                 </table>
@@ -91,52 +95,50 @@
                     </div>
                 </div>
                 @if (count(cart()) > 0)
-        <div class="row">
-            <div class="col-md-12 col-lg-8">
-                <div class="cart-calculate-discount-wrap mb-40">
-                    <h4>Calculate shipping </h4>
-                    <div class="calculate-discount-content">
-                        <div class="select-style">
-                            <select class="select-active">
-                                <option>Bangladesh</option>
-                                <option>Bahrain</option>
-                                <option>Azerbaijan</option>
-                                <option>Barbados</option>
-                                <option>Barbados</option>
-                            </select>
+                    <div class="row">
+                        <div class="col-md-12 col-lg-8">
+                            <div class="cart-calculate-discount-wrap mb-40">
+                                <h4>Calculate shipping </h4>
+                                <div class="calculate-discount-content">
+                                    <div class="select-style">
+                                        <select class="select-active">
+                                            @foreach ($data as $item)
+                                                <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="select-style">
+                                        <select class="select-active">
+                                            <option>State / County</option>
+                                            <option>Bahrain</option>
+                                            <option>Azerbaijan</option>
+                                            <option>Barbados</option>
+                                            <option>Barbados</option>
+                                        </select>
+                                    </div>
+                                    <div class="input-style">
+                                        <input type="text" placeholder="Town / City">
+                                    </div>
+                                    <div class="input-style mb-6">
+                                        <input type="text" placeholder="Postcode / ZIP">
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="select-style">
-                            <select class="select-active">
-                                <option>State / County</option>
-                                <option>Bahrain</option>
-                                <option>Azerbaijan</option>
-                                <option>Barbados</option>
-                                <option>Barbados</option>
-                            </select>
-                        </div>
-                        <div class="input-style">
-                            <input type="text" placeholder="Town / City">
-                        </div>
-                        <div class="input-style mb-6">
-                            <input type="text" placeholder="Postcode / ZIP">
+                        <div class="col-md-12 col-lg-4">
+                            <div class="grand-total-wrap mt-10 mt-lg-0">
+                                <div class="grand-total-content">
+                                    <div class="grand-total">
+                                        <h4>Total <span>{{ cartSubTotal() }}</span></h4>
+                                    </div>
+                                </div>
+                                <div class="grand-total-btn">
+                                    <a class="btn btn-link btn-checkout" href="javascript:void(0)">Proceed to checkout</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-md-12 col-lg-4">
-                <div class="grand-total-wrap mt-10 mt-lg-0">
-                    <div class="grand-total-content">
-                        <div class="grand-total">
-                            <h4>Total <span>{{ cartSubTotal() }}</span></h4>
-                        </div>
-                    </div>
-                    <div class="grand-total-btn">
-                        <a class="btn btn-link" href="shop-checkout.html">Proceed to checkout</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endif
+                @endif
             </div>
         </section>
     </div>
@@ -144,6 +146,7 @@
 @endsection
 
 @push('script')
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-WLa4T_aeiQfLdfyC"></script>
     <script>
         $(document).ready(function() {
 
@@ -167,7 +170,7 @@
                                 Swal.fire(result.title, result.message, result.status);
                                 getCart();
                                 $("body").find(".item-total").text(result.cartTotal);
-                                if(result.status == 'success') {
+                                if (result.status == 'success') {
                                     $('.shopping-cart-render').html(result.render.data)
                                 }
                             },
@@ -175,6 +178,57 @@
                     }
                 });
             });
+
+            $('body').on('click', '.btn-checkout', function() {
+                $.ajaxSetup({
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    },
+                });
+                Swal.fire({
+                    title: "Lanjutkan checkout?",
+                    text: "Proses akan dilanjutkan ke tahap pembayaran!",
+                    icon: "success",
+                    showCancelButton: true,
+                    confirmButtonColor: "#3085d6",
+                    cancelButtonColor: "#d33",
+                    confirmButtonText: "Ya, lanjutkan!",
+                    cancelButtonText: "Batal",
+                }).then((result) => {
+                    if (result.value) {
+                        $.ajax({
+                            url: "/shopping-cart/checkout",
+                            type: "POST",
+                            success: function(result) {
+                                if (result.status == 'success') {
+                                    snap.pay(result.midtransToken, {
+                                        // Optional
+                                        onSuccess: function(result) {
+                                            /* You may add your own js here, this is just example */
+                                            // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                                            console.log(result)
+                                        },
+                                        // Optional
+                                        onPending: function(result) {
+                                            /* You may add your own js here, this is just example */
+                                            // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                                            console.log(result)
+                                        },
+                                        // Optional
+                                        onError: function(result) {
+                                            /* You may add your own js here, this is just example */
+                                            // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                                            console.log(result)
+                                        }
+                                    });
+                                }
+                                // Swal.fire(result.title, result.message, result.status);
+                                // getCart();
+                            },
+                        });
+                    }
+                });
+            })
         });
     </script>
 @endpush

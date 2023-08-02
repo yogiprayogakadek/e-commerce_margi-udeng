@@ -72,6 +72,7 @@ function getCart() {
 }
 
 $(document).ready(function () {
+    localStorage.clear();
     getCart();
 
     $("body").on("click", ".btn-remove-item", function () {

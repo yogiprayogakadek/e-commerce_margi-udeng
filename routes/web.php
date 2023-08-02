@@ -6,6 +6,7 @@ Route::namespace('Landing')->group(function() {
     Route::controller(LandingController::class)
         ->prefix('/')
         ->as('landing.')
+        // ->middleware('httpHeader')
         ->group(function() {
             Route::get('/', 'index')->name('index');
             Route::get('/detail-produk/{produk_id}', 'detailProduk')->name('detail.produk');
@@ -32,8 +33,9 @@ Route::namespace('Landing')->group(function() {
         ->prefix('/shopping-cart')
         ->as('shopping.cart.')
         ->group(function() {
-            Route::get('/index', 'index')->name('index');
+            Route::get('/', 'index')->name('index');
             Route::get('/remove-item/{cart_id}', 'removeItem')->name('remove.item');
+            Route::post('/checkout', 'checkout')->name('checkout');
         });
 });
 
@@ -93,6 +95,7 @@ Route::middleware('guest')->namespace('Main')->group(function () {
             Route::post('/', 'signup')->name('signup');
         });
 });
+
 
 Auth::routes();
 
