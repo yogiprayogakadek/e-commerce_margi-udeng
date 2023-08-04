@@ -12,9 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('order', function (Blueprint $table) {
-            $table->id()->startingValue(11007);
+            $table->string('id', 50)->primary();
             $table->string('order_code', 50);
-            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('user_id', 50);
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->json('alamat');
             $table->timestamps();
         });

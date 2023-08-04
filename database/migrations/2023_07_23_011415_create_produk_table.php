@@ -12,8 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('produk', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('kategori_id')->references('id')->on('kategori')->onDelete('cascade');
+            $table->string('id', 50)->primary();
+            $table->string('kategori_id', 50);
+            $table->foreign('kategori_id')->references('id')->on('kategori')->onDelete('cascade');
             $table->string('nama',100);
             $table->string('foto', 100);
             $table->json('data')->nullable();

@@ -1,7 +1,7 @@
 <footer class="footer-area">
     <!--== Start Footer Main ==-->
     <div class="footer-main">
-        <div class="container">
+        {{-- <div class="container">
             <div class="row mb-n6">
                 <div class="col-sm-12 col-md-3 col-lg-3 mb-6">
                     <div class="widget-item">
@@ -71,7 +71,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
     <!--== End Footer Main ==-->
 
@@ -79,10 +79,10 @@
     <div class="footer-bottom">
         <div class="container pt-0 pb-0">
             <div class="footer-bottom-content">
-                <a href="shop.html"><img src="{{asset('assets/landing/images/shop/payment.png')}}" alt="Image-HasTech"></a>
-                <p class="copyright">© 2021 Merier. Made with <i class="fa fa-heart"></i> by <a
+                <a href="shop.html"><img src="{{asset('assets/landing/images/logo.png')}}" alt="Image-HasTech"></a>
+                <p class="copyright">© Pakaian Adat Bali. Made with <i class="fa fa-heart"></i> by <a
                         target="_blank"
-                        href="https://themeforest.net/user/codecarnival/portfolio">Codecarnival.</a></p>
+                        href="{{route('landing.index')}}">Margi Udeng.</a></p>
             </div>
         </div>
     </div>

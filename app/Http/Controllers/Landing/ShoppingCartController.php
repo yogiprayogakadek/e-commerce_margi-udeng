@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DetailOrder;
 use App\Models\Order;
 use App\Models\Pembayaran;
+use App\Models\Produk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -38,6 +39,16 @@ class ShoppingCartController extends Controller
         }
 
         return $data;
+    }
+
+    private function searchBySize($array, $search)
+    {
+        foreach($array as $key => $value) {
+            if($value['size'] === $search) {
+                return $key;
+            }
+        }
+        return null;
     }
 
     private function openJsonFile($filename)
@@ -132,6 +143,7 @@ class ShoppingCartController extends Controller
                     'phone'       => Auth::user()->customer->telp
                 ],
             ];
+
             DB::commit();
 
             return response()->json([
@@ -163,6 +175,48 @@ class ShoppingCartController extends Controller
                     'payment_payload' => json_encode($request->all())
                 ]);
             }
+        }
+    }
+
+    public function paymentChecking(Request $request)
+    {
+        try {
+            if($request->status_code == 200) {
+                // update order status
+                $order = Order::where('id', $request->order_id);
+                $order->update([
+                    'status' => 'Success'
+                ]);
+
+                foreach(cart() as $c) {
+                    $produk = Produk::find($c->associatedModel['id']);
+                    $payload = json_decode($produk->data, true);
+                    $key = $this->searchBySize($payload, $c->attributes['size']);
+                    $payload[$key]['stok'] = $payload[$key]['stok'] - $c->quantity;
+                    $produk->update([
+                        'data' => json_encode($payload)
+                    ]);
+                }
+
+                // clear all shopping cart
+                \Cart::session(Auth::user()->id)->clear();
+            }
+            $view = [
+                'data' => view('landing.shop-cart.render')->render()
+            ];
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Pembayaran berhasil',
+                'title' => 'Berhasil',
+                'cartTotal' => count(cart()),
+                'render' => $view
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'title' => 'Gagal'
+            ]);
         }
     }
 }

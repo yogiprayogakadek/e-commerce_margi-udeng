@@ -7,18 +7,27 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Ramsey\Uuid\Uuid;
 
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    protected $table = 'users';
+    protected $primaryKey = 'id';
+    public $incrementing = false;
+    protected $keyType = 'string';
     protected $fillable = [
-        'foto',
-        'role',
-        'email',
-        'password',
-        'is_active',
+        'email', 'password', 'role', 'foto'
     ];
+
+    protected static function boot() {
+        parent::boot();
+
+        static::creating(function ($model) {
+            $model->id = str_replace('-','',Uuid::uuid4()->getHex());
+        });
+    }
 
     public function hasRole($role)
     {

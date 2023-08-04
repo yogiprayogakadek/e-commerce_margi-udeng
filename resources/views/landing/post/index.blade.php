@@ -2,7 +2,7 @@
 
 @section('content')
     <!--== Start Page Header Area Wrapper ==-->
-    <section class="page-header-area" data-bg-color="#F1FAEE">
+    {{-- <section class="page-header-area" data-bg-color="#F1FAEE">
         <div class="container">
             <div class="row">
                 <div class="col-sm-8">
@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
     <!--== End Page Header Area Wrapper ==-->
 
     <!--== Start Product Details Area Wrapper ==-->

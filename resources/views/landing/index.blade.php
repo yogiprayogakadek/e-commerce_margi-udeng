@@ -13,17 +13,20 @@
                                     <div class="hero-slide-shape-img"><img
                                             src="{{ asset('assets/landing/images/slider/shape1.png') }}" width="180"
                                             height="180" alt="Image"></div>
-                                    <h4 class="hero-slide-sub-title">HURRY UP!</h4>
-                                    <h1 class="hero-slide-title">Let’s find your fashion outfit.</h1>
-                                    <p class="hero-slide-desc">Lorem Ipsum is simply dummy text of the printing
-                                        and typesetting industry. Lorem Ipsum has been the industry.</p>
+                                    <h4 class="hero-slide-sub-title">Selamat Datang di Margi Udeng E-Commerce!</h4>
+                                    <h1 class="hero-slide-title">Pakaian Adat Bali Anda!
+                                    </h1>
+                                    <p class="hero-slide-desc">Selamat berbelanja pakaian adat Bali yang memukau dan menawan
+                                        di Margi Udeng. Nikmati keunikan motif dan tenunan khas Bali untuk tampilan yang
+                                        memikat hati. Jelajahi koleksi kami yang kaya akan warisan budaya Bali, dan rasakan
+                                        pesonanya mengalir dalam setiap jahitan.</p>
                                     <div class="hero-slide-meta">
-                                        <a class="btn btn-border-primary" href="shop.html">Shop Now</a>
-                                        <a class="ht-popup-video" data-fancybox data-type="iframe"
+                                        <a class="btn btn-border-primary" href="#product-area">Belanja Sekarang</a>
+                                        {{-- <a class="ht-popup-video" data-fancybox data-type="iframe"
                                             href="https://player.vimeo.com/video/172601404?autoplay=1">
                                             <i class="fa fa-play icon"></i>
                                             <span>Play Now</span>
-                                        </a>
+                                        </a> --}}
                                     </div>
                                 </div>
                             </div>
@@ -34,11 +37,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="hero-social">
+                        {{-- <div class="hero-social">
                             <a href="https://www.facebook.com/" target="_blank" rel="noopener">fb</a>
                             <a href="https://www.twitter.com/" target="_blank" rel="noopener">tw</a>
                             <a href="https://www.linkedin.com/" target="_blank" rel="noopener">in</a>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="swiper-slide hero-slide-item">
@@ -49,18 +52,21 @@
                                     <div class="hero-slide-shape-img"><img
                                             src="{{ asset('assets/landing/images/slider/shape1.png') }}" width="180"
                                             height="180" alt="Image"></div>
-                                    <h4 class="hero-slide-sub-title">HURRY UP!</h4>
-                                    <h2 class="hero-slide-title">Let’s find your fashion outfit.</h2>
-                                    <p class="hero-slide-desc">Lorem Ipsum is simply dummy text of the printing
-                                        and typesetting industry. Lorem Ipsum has been the industry.</p>
-                                    <div class="hero-slide-meta">
-                                        <a class="btn btn-border-primary" href="shop.html">Shop Now</a>
-                                        <a class="ht-popup-video" data-fancybox data-type="iframe"
-                                            href="https://player.vimeo.com/video/172601404?autoplay=1">
-                                            <i class="fa fa-play icon"></i>
-                                            <span>Play Now</span>
-                                        </a>
-                                    </div>
+                                            <h4 class="hero-slide-sub-title">Selamat Datang di Margi Udeng E-Commerce!</h4>
+                                            <h1 class="hero-slide-title">Pakaian Adat Bali Anda!
+                                            </h1>
+                                            <p class="hero-slide-desc">Selamat berbelanja pakaian adat Bali yang memukau dan menawan
+                                                di Margi Udeng. Nikmati keunikan motif dan tenunan khas Bali untuk tampilan yang
+                                                memikat hati. Jelajahi koleksi kami yang kaya akan warisan budaya Bali, dan rasakan
+                                                pesonanya mengalir dalam setiap jahitan.</p>
+                                            <div class="hero-slide-meta">
+                                                <a class="btn btn-border-primary" href="#product-area">Belanja Sekarang</a>
+                                                {{-- <a class="ht-popup-video" data-fancybox data-type="iframe"
+                                                    href="https://player.vimeo.com/video/172601404?autoplay=1">
+                                                    <i class="fa fa-play icon"></i>
+                                                    <span>Play Now</span>
+                                                </a> --}}
+                                            </div>
                                 </div>
                             </div>
                             <div class="col-12 col-sm-6">
@@ -89,15 +95,15 @@
             <div class="swiper banner-slider-container">
                 <div class="swiper-wrapper">
                     <a href="shop.html" class="swiper-slide product-banner-item">
-                        <img class="icon" src="{{ asset('assets/landing/images/shop/banner/01.png') }}" width="370"
+                        <img class="icon" src="{{ asset('assets/landing/images/shop/banner/kebaya.png') }}" width="370"
                             height="294" alt="Image-HasTech">
                     </a>
                     <a href="shop.html" class="swiper-slide product-banner-item">
-                        <img class="icon" src="{{ asset('assets/landing/images/shop/banner/02.png') }}" width="370"
+                        <img class="icon" src="{{ asset('assets/landing/images/shop/banner/saputan.png') }}" width="370"
                             height="294" alt="Image-HasTech">
                     </a>
                     <a href="shop.html" class="swiper-slide product-banner-item">
-                        <img class="icon" src="{{ asset('assets/landing/images/shop/banner/03.png') }}" width="370"
+                        <img class="icon" src="{{ asset('assets/landing/images/shop/banner/sandal.jpg') }}" width="370"
                             height="294" alt="Image-HasTech">
                     </a>
                 </div>
@@ -108,7 +114,7 @@
     <!--== End Product Banner Area Wrapper ==-->
 
     <!--== Start Product Area Wrapper ==-->
-    <section class="product-area section-space">
+    <section class="product-area section-space" id="product-area">
         <div class="container">
             <div class="section-title text-center">
                 <h2 class="title">Best Products</h2>
@@ -142,13 +148,14 @@
                             </button> --}}
                             </div>
                             <div class="product-info">
-                                <h4 class="title"><a href="shop-single-product.html">{{ $value->nama }}</a>
+                                <h4 class="title"><a href="{{ route('landing.post.index', $value->id) }}">{{ $value->nama }}</a>
                                 </h4>
-                                <div class="price">$650.00</div>
-                                <button type="button" class="info-btn-wishlist" data-bs-toggle="modal"
-                                    data-bs-target="#action-WishlistModal">
-                                    <i class="fa fa-heart-o"></i>
+                                <div class="price">{!!$value->harga_terendah == $value->harga_tertinggi ? toRupiah($value->harga_terendah) . '</br></br>' : toRupiah($value->harga_terendah) . '-' . toRupiah($value->harga_tertinggi)!!}</div>
+                                <a href="{{ route('landing.post.index', $value->id) }}">
+                                <button type="button" class="info-btn-wishlist">
+                                    <i class="fa fa-eye"></i>
                                 </button>
+                            </a>
                             </div>
                         </div>
                         <!--== End prPduct Item ==-->
@@ -286,7 +293,7 @@
 
         $('body').on('click', '.detail-button', function() {
             let produk_id = localStorage.getItem('produk_id')
-            window.location = '/post/'+produk_id
+            window.location = '/post/' + produk_id
         });
     </script>
 @endpush

@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kategori', function (Blueprint $table) {
-            $table->string('id', 50)->primary();
-            $table->string('nama', 50);
-            $table->boolean('status')->default(true);
-            $table->timestamps();
+        Schema::table('order', function (Blueprint $table) {
+            $table->enum('status', ['Waiting for Payment', 'Success', 'Failed'])->default('Waiting for Payment')->after('user_id');
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kategori');
+        Schema::table('order', function (Blueprint $table) {
+            $table->dropColumn('status');
+        });
     }
 };

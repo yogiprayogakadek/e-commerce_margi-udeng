@@ -8,10 +8,10 @@
                 <div class="col-sm-8">
                     <div class="page-header-content">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{route('shopping.cart.index')}}">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Cart</li>
                         </ol>
-                        <h2 class="page-header-title">All Trending Products</h2>
+                        <h2 class="page-header-title">Keranjang Belanja</h2>
                     </div>
                 </div>
                 <div class="col-sm-4 d-sm-flex justify-content-end align-items-end">
@@ -146,9 +146,51 @@
 @endsection
 
 @push('script')
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js">
+    </script>
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-WLa4T_aeiQfLdfyC"></script>
     <script>
         $(document).ready(function() {
+
+            function paymentChecking(status_code, order_id) {
+                $.ajaxSetup({
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    },
+                });
+
+                $.ajax({
+                    type: "POST",
+                    url: "/shopping-cart/payment-checking",
+                    data: {
+                        status_code: status_code,
+                        order_id: order_id,
+                    },
+                    success: function(response) {
+                        Swal.fire(response.title, response.message, response.status);
+                        getCart();
+                        $("body").find(".item-total").text(response.cartTotal);
+                        $('.shopping-cart-render').html(response.render.data)
+                    }
+                });
+            }
+
+            function screenLoading() {
+                $.LoadingOverlay("show", {
+                    image: "",
+                    progress: true
+                });
+                var count = 0;
+                var interval = setInterval(function() {
+                    if (count >= 100) {
+                        clearInterval(interval);
+                        $.LoadingOverlay("hide");
+                        return;
+                    }
+                    count += 10;
+                    $.LoadingOverlay("progress", count);
+                }, 200);
+            }
 
             $("body").on("click", ".remove-item", function() {
                 var id = $(this).data("id");
@@ -194,36 +236,41 @@
                     cancelButtonColor: "#d33",
                     confirmButtonText: "Ya, lanjutkan!",
                     cancelButtonText: "Batal",
-                }).then((result) => {
-                    if (result.value) {
+                }).then((response) => {
+                    if (response.value) {
                         $.ajax({
                             url: "/shopping-cart/checkout",
                             type: "POST",
-                            success: function(result) {
-                                if (result.status == 'success') {
-                                    snap.pay(result.midtransToken, {
-                                        // Optional
+                            success: function(res) {
+                                screenLoading();
+                                if (res.status == 'success') {
+                                    snap.pay(res.midtransToken, {
                                         onSuccess: function(result) {
-                                            /* You may add your own js here, this is just example */
-                                            // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-                                            console.log(result)
+                                            paymentChecking(result
+                                                .status_code, result.order_id);
+                                            // Swal.fire('Berhasil', 'Pembayaran berhasil', 'success');
+                                            // setTimeout(() => {
+                                            //     location.reload();
+                                            // }, 1000);
                                         },
-                                        // Optional
                                         onPending: function(result) {
-                                            /* You may add your own js here, this is just example */
-                                            // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-                                            console.log(result)
+                                            paymentChecking(result
+                                                .status_code, result.order_id);
+                                            // Swal.fire('Info', 'Menunggu pembayaran', 'info');
+                                            // setTimeout(() => {
+                                            //     location.reload();
+                                            // }, 1000);
                                         },
-                                        // Optional
                                         onError: function(result) {
-                                            /* You may add your own js here, this is just example */
-                                            // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-                                            console.log(result)
+                                            paymentChecking(result
+                                                .status_code, result.order_id);
+                                            // Swal.fire('Gagal', 'Pembayaran gagal', 'error');
+                                            // setTimeout(() => {
+                                            //     location.reload();
+                                            // }, 1000);
                                         }
                                     });
                                 }
-                                // Swal.fire(result.title, result.message, result.status);
-                                // getCart();
                             },
                         });
                     }

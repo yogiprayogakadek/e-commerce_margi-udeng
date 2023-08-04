@@ -10,8 +10,8 @@ class LandingController extends Controller
 {
     private function searchBySize($array, $search)
     {
-        foreach($array as $key => $value) {
-            if($value['size'] === $search) {
+        foreach ($array as $key => $value) {
+            if ($value['size'] === $search) {
                 return $key;
             }
         }
@@ -20,7 +20,25 @@ class LandingController extends Controller
 
     public function index()
     {
-        $produk = Produk::where('status', true)->where('data', '!=', null)->get();
+        // $produk = Produk::where('status', true)->where('data', '!=', null)->get();
+        // return view('landing.index', compact('produk'));
+
+        $produk = Produk::where('status', true)
+            ->where('data', '!=', null)
+            ->get();
+
+        $allPrices = collect();
+
+        $produk->each(function ($item) use ($allPrices) {
+            $data = json_decode($item->data, true);
+            $harga = collect($data)->pluck('harga');
+            $allPrices = $allPrices->merge($harga);
+
+            $item->harga_terendah = $harga->min();
+            $item->harga_tertinggi = $harga->max();
+        });
+
+
         return view('landing.index', compact('produk'));
     }
 
@@ -35,7 +53,7 @@ class LandingController extends Controller
 
 
         $payload = json_decode($produk->data, true);
-        foreach($payload as $key => $value) {
+        foreach ($payload as $key => $value) {
             $foto[] = $value['foto'];
             $size[] = $value['size'];
             $harga[] = $value['harga'];
@@ -60,7 +78,7 @@ class LandingController extends Controller
         ];
 
         $payload = json_decode($produk->data, true);
-        foreach($payload as $key => $value) {
+        foreach ($payload as $key => $value) {
             $foto[] = $value['foto'];
             $size[] = $value['size'];
             $harga[] = $value['harga'];

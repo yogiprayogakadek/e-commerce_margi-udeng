@@ -3,7 +3,7 @@
         <div class="row align-items-center justify-content-between">
             <div class="col-auto">
                 <div class="header-logo">
-                    <a href="index.html">
+                    <a href="{{route('landing.index')}}">
                         <img class="logo-main" src="{{asset('assets/landing/images/logo.png')}}" width="153" height="30"
                             alt="Logo">
                     </a>
@@ -12,74 +12,30 @@
             <div class="col-auto d-none d-lg-block">
                 <div class="header-navigation">
                     <ul class="main-nav">
-                        <li class="has-submenu"><a href="index.html">Home</a>
-                            <ul class="submenu-nav">
-                                <li><a href="index.html">Home One</a></li>
-                                <li><a href="index-two.html">Home Two</a></li>
-                            </ul>
-                        </li>
-                        <li class="has-submenu position-static"><a href="shop.html">Shop</a>
-                            <ul class="submenu-nav-mega">
-                                <li><a href="shop.html" class="mega-title">Shop Layout</a>
-                                    <ul>
-                                        <li><a href="shop.html">Shop 3 Column</a></li>
-                                        <li><a href="shop-four-columns.html">Shop 4 Column</a></li>
-                                        <li><a href="shop-left-sidebar.html">Shop Left Sidebar</a></li>
-                                        <li><a href="shop-right-sidebar.html">Shop Right Sidebar</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="shop-single-product.html" class="mega-title">Single Product</a>
-                                    <ul>
-                                        <li><a href="shop-single-product.html">Single Product Normal</a></li>
-                                        <li><a href="shop-single-product-variable.html">Single Product
-                                                Variable</a></li>
-                                        <li><a href="shop-single-product-group.html">Single Product Group</a>
-                                        </li>
-                                        <li><a href="shop-single-product-affiliate.html">Single Product
-                                                Affiliate</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="shop-cart.html" class="mega-title">Others Pages</a>
-                                    <ul>
-                                        <li><a href="shop-cart.html">Shopping Cart</a></li>
-                                        <li><a href="shop-checkout.html">Checkout</a></li>
-                                        <li><a href="shop-wishlist.html">Wishlist</a></li>
-                                        <li><a href="shop-compare.html">Compare</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="has-submenu"><a href="about-us.html">Pages</a>
-                            <ul class="submenu-nav">
-                                <li><a href="about-us.html">About</a></li>
-                                <li><a href="account.html">Account</a></li>
-                                <li><a href="login-register.html">Login/Register</a></li>
-                                <li><a href="page-not-found.html">Page Not Found</a></li>
-                                <li><a href="contact.html">Contact</a></li>
-                            </ul>
-                        </li>
-                        <li class="has-submenu"><a href="blog.html">Blog</a>
-                            <ul class="submenu-nav">
-                                <li><a href="blog.html">Blog Grid</a></li>
-                                <li><a href="blog-left-sidebar.html">Blog Left Sidebar</a></li>
-                                <li><a href="blog-right-sidebar.html">Blog Right Sidebar</a></li>
-                                <li><a href="blog-details.html">Blog Details</a></li>
-                                <li><a href="blog-details-left-sidebar.html">Blog Details Left Sidebar</a></li>
-                                <li><a href="blog-details-right-sidebar.html">Blog Details Right Sidebar</a>
-                                </li>
-                            </ul>
-                        </li>
+                        <li><a href="{{route('landing.index')}}">Home</a></li>
+                        @auth
+                        <li><a href="{{route('shopping.cart.index')}}">Keranjang Belanja</a></li>
+                        <li><a href="{{route('account.index')}}">Akun</a></li>
+                        <li><a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" href="{{route('logout')}}">Logout</a></li>
+
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                        @endauth
+                        @guest
+                            <li ><a href="{{ route('login') }}">Login</a></li>
+                        @endguest
                     </ul>
                 </div>
             </div>
             <div class="col-auto">
                 <div class="header-action">
-                    <form class="header-search-box d-none d-md-block">
+                    {{-- <form class="header-search-box d-none d-md-block">
                         <input class="form-control" type="text" id="search" placeholder="Search">
                         <button type="submit" class="btn-src">
                             <i class="fa fa-search"></i>
                         </button>
-                    </form>
+                    </form> --}}
                     <button class="header-action-cart" type="button" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasWithCartSidebar" aria-controls="offcanvasWithCartSidebar"> <span class="item-total">{{Auth::check() == true ? count(cart()) : 0}}</span> Items
                         <span class="cart-icon">
@@ -90,7 +46,7 @@
                             </svg>
                         </span>
                     </button>
-                    <button class="btn-search-menu d-md-none" type="button" data-bs-toggle="offcanvas"
+                    {{-- <button class="btn-search-menu d-md-none" type="button" data-bs-toggle="offcanvas"
                         data-bs-target="#AsideOffcanvasSearch" aria-controls="AsideOffcanvasSearch">
                         <span class="search-icon">
                             <svg width="22" height="22" viewBox="0 0 22 22" fill="none"
@@ -99,7 +55,7 @@
                                     d="M12.5 11H11.71L11.43 10.73C12.41 9.59 13 8.11 13 6.5C13 2.91 10.09 0 6.5 0C2.91 0 0 2.91 0 6.5C0 10.09 2.91 13 6.5 13C8.11 13 9.59 12.41 10.73 11.43L11 11.71V12.5L16 17.49L17.49 16L12.5 11ZM6.5 11C4.01 11 2 8.99 2 6.5C2 4.01 4.01 2 6.5 2C8.99 2 11 4.01 11 6.5C11 8.99 8.99 11 6.5 11Z" />
                             </svg>
                         </span>
-                    </button>
+                    </button> --}}
                     <button class="btn-menu d-lg-none" type="button" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasWithBothOptions" aria-controls="offcanvasWithBothOptions">
                         <i class="fa fa-bars"></i>
