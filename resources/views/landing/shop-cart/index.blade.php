@@ -1,5 +1,9 @@
 @extends('landing.templates.master')
 
+@push('css')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+@endpush
+
 @section('content')
     <!--== Start Page Header Area Wrapper ==-->
     <section class="page-header-area" data-bg-color="#F1FAEE">
@@ -8,7 +12,7 @@
                 <div class="col-sm-8">
                     <div class="page-header-content">
                         <ol class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="{{route('shopping.cart.index')}}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('shopping.cart.index') }}">Home</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Cart</li>
                         </ol>
                         <h2 class="page-header-title">Keranjang Belanja</h2>
@@ -86,7 +90,8 @@
                         </div>
                         <div class="cart-shiping-update-wrapper">
                             <div class="cart-shiping-btn continure-btn">
-                                <a class="btn btn-link" href="{{ route('landing.index') }}"><i class="fa fa-angle-left"></i>
+                                <a class="btn btn-link" href="{{ route('landing.index') }}"><i
+                                        class="fa fa-angle-left"></i>
                                     Back To Shop</a>
                             </div>
                         </div>
@@ -96,31 +101,44 @@
                 </div>
                 @if (count(cart()) > 0)
                     <div class="row">
+                        {{-- <div class="col-md-12 col-lg-8">
+                            <div class="form-group">
+                                <select name="provinces" id="provinces" class="form-control" style="width: 100%; height: 100%">
+                                    <option value="OP">OP</option>
+                                </select>
+                            </div>
+                        </div> --}}
                         <div class="col-md-12 col-lg-8">
                             <div class="cart-calculate-discount-wrap mb-40">
                                 <h4>Calculate shipping </h4>
                                 <div class="calculate-discount-content">
                                     <div class="select-style">
-                                        <select class="select-active">
-                                            @foreach ($data as $item)
+                                        <select class="form-control provinces js-states" id="provinces" name="provinces"
+                                            style="width: 100%;">
+                                            <option></option>
+                                            @foreach ($provinces as $item)
                                                 <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="select-style">
-                                        <select class="select-active">
-                                            <option>State / County</option>
-                                            <option>Bahrain</option>
-                                            <option>Azerbaijan</option>
-                                            <option>Barbados</option>
-                                            <option>Barbados</option>
-                                        </select>
+                                        <select class="form-control regencies js-states" id="regencies" name="regencies"
+                                            style="width: 100%;"></select>
                                     </div>
-                                    <div class="input-style">
-                                        <input type="text" placeholder="Town / City">
+                                    <div class="select-style">
+                                        <select class="form-control districts js-states" id="districts" name="districts"
+                                            style="width: 100%;"></select>
+                                    </div>
+                                    <div class="select-style">
+                                        <select class="form-control villages js-states" id="villages" name="villages"
+                                            style="width: 100%;"></select>
                                     </div>
                                     <div class="input-style mb-6">
-                                        <input type="text" placeholder="Postcode / ZIP">
+                                        <input type="text" placeholder="Kode POS" name="kode_pos" id="kode-pos" hidden>
+                                    </div>
+                                    <div class="input-style">
+                                        <input type="text" placeholder="Alamat lengkap" id="alamat" name="alamat"
+                                            hidden>
                                     </div>
                                 </div>
                             </div>
@@ -133,7 +151,7 @@
                                     </div>
                                 </div>
                                 <div class="grand-total-btn">
-                                    <a class="btn btn-link btn-checkout" href="javascript:void(0)">Proceed to checkout</a>
+                                    <a class="btn btn-link checkout" href="javascript:void(0)">Proceed to checkout</a>
                                 </div>
                             </div>
                         </div>
@@ -149,8 +167,14 @@
     <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js">
     </script>
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-WLa4T_aeiQfLdfyC"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
+            $('.nice-select').hide()
+            $('#provinces').select2({
+                placeholder: "Pilih Provinsi",
+                allowClear: true
+            });
 
             function paymentChecking(status_code, order_id) {
                 $.ajaxSetup({
@@ -241,13 +265,22 @@
                         $.ajax({
                             url: "/shopping-cart/checkout",
                             type: "POST",
+                            data: {
+                                provinsi: $('#provinces').find("option:selected").text(),
+                                kabupaten: $('#regencies').find("option:selected").text(),
+                                kecamatan: $('#districts').find("option:selected").text(),
+                                desa: $('#villages').find("option:selected").text(),
+                                kode_pos: $('#kode-pos').val(),
+                                alamat: $('#alamat').val(),
+                            },
                             success: function(res) {
                                 screenLoading();
                                 if (res.status == 'success') {
                                     snap.pay(res.midtransToken, {
                                         onSuccess: function(result) {
                                             paymentChecking(result
-                                                .status_code, result.order_id);
+                                                .status_code, result
+                                                .order_id);
                                             // Swal.fire('Berhasil', 'Pembayaran berhasil', 'success');
                                             // setTimeout(() => {
                                             //     location.reload();
@@ -255,7 +288,8 @@
                                         },
                                         onPending: function(result) {
                                             paymentChecking(result
-                                                .status_code, result.order_id);
+                                                .status_code, result
+                                                .order_id);
                                             // Swal.fire('Info', 'Menunggu pembayaran', 'info');
                                             // setTimeout(() => {
                                             //     location.reload();
@@ -263,7 +297,8 @@
                                         },
                                         onError: function(result) {
                                             paymentChecking(result
-                                                .status_code, result.order_id);
+                                                .status_code, result
+                                                .order_id);
                                             // Swal.fire('Gagal', 'Pembayaran gagal', 'error');
                                             // setTimeout(() => {
                                             //     location.reload();
@@ -275,6 +310,90 @@
                         });
                     }
                 });
+            })
+
+            $('body').on('change', '#provinces', function() {
+                let province_id = $('select[name=provinces] option').filter(':selected').val()
+
+                $('#regencies').empty();
+                $.get("/shopping-cart/regency/" + province_id, function(data) {
+                    $('#regencies').select2({
+                        placeholder: "Pilih Kabupaten",
+                        allowClear: true
+                    });
+
+                    let option = '<option></option>';
+                    $.each(data, function(index, value) {
+                        option += '<option value=' + value.id + '>' + value.name +
+                            '</option>';
+                    });
+                    $('.regencies').append(option);
+                });
+            });
+
+            $('body').on('change', '#regencies', function() {
+                let regency_id = $('select[name=regencies] option').filter(':selected').val()
+
+                $('#districts').empty();
+                $.get("/shopping-cart/district/" + regency_id, function(data) {
+                    $('#districts').select2({
+                        placeholder: "Pilih Kecamatan",
+                        allowClear: true
+                    });
+
+                    let option = '<option></option>';
+                    $.each(data, function(index, value) {
+                        option += '<option value=' + value.id + '>' + value.name +
+                            '</option>';
+                    });
+                    $('.districts').append(option);
+                });
+            });
+
+            $('body').on('change', '#districts', function() {
+                let district_id = $('select[name=districts] option').filter(':selected').val();
+
+                $('#kode-pos').prop('hidden', false)
+                $('#alamat').prop('hidden', false)
+
+                $('#villages').empty();
+                $.get("/shopping-cart/village/" + district_id, function(data) {
+                    $('#villages').select2({
+                        placeholder: "Pilih Desa",
+                        allowClear: true
+                    });
+
+                    let option = '<option></option>';
+                    $.each(data, function(index, value) {
+                        option += '<option value=' + value.id + '>' + value.name +
+                            '</option>';
+                    });
+                    $('.villages').append(option);
+                });
+            });
+
+            $('body').on('keyup', '#kode-pos', function() {
+                let kodePos = $(this).val();
+                let alamat = $('#alamat').val();
+
+                $("#kode-pos").inputFilter(function(value) {
+                    return /^\d*$/.test(value); // Allow digits only, using a RegExp
+                }, "hanya angka");
+                if (kodePos != '' && alamat != '') {
+                    $('.checkout').addClass('btn-checkout')
+                } else {
+                    $('.checkout').removeClass('btn-checkout')
+                }
+            })
+
+            $('body').on('keyup', '#alamat', function() {
+                let alamat = $(this).val();
+                let kodePos = $('#kode-pos').val();
+                if (kodePos != '' && alamat != '') {
+                    $('.checkout').addClass('btn-checkout')
+                } else {
+                    $('.checkout').removeClass('btn-checkout')
+                }
             })
         });
     </script>

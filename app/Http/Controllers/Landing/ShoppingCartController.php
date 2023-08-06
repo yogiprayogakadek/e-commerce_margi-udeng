@@ -58,28 +58,6 @@ class ShoppingCartController extends Controller
         return $file;
     }
 
-
-    public function index()
-    {
-    //     $provinces = $this->openJsonFile('provinces');
-    //     $province_id = $provinces[$this->searchArea($provinces, "name", strtoupper("nusa tenggara barat"))];
-
-        $file = $this->openJsonFile('regencies');
-        $regencies = $this->searchArea($file, "province_id", 52);
-        //dd($file[282]);
-        $data = array();
-        foreach($regencies as $key => $r) {
-            if($key <= 2) {
-                $data[] = $file[$r];
-            } else {
-                break;
-            }
-        }
-        return view('landing.shop-cart.index')->with([
-            'data' => $data
-        ]);
-    }
-
     public function removeItem($id)
     {
         $user = auth()->user()->id;
@@ -107,8 +85,12 @@ class ShoppingCartController extends Controller
                 'order_code' => $this->order_code(),
                 'user_id' => Auth::user()->id,
                 'alamat' => json_encode([
-                    'kabupaten' => 'Lombok Barat',
-                    'kecamatan' => 'Lombok'
+                    'provinsi' => $request->provinsi,
+                    'kabupaten' => $request->kabupaten,
+                    'kecamatan' => $request->kecamatan,
+                    'desa' => $request->desa,
+                    'kode_pos' => $request->kode_pos,
+                    'alamat' => $request->alamat,
                 ]),
             ]);
 
@@ -218,5 +200,66 @@ class ShoppingCartController extends Controller
                 'title' => 'Gagal'
             ]);
         }
+    }
+
+    public function searchRegencies($province_id) {
+        $file = $this->openJsonFile('regencies');
+        $data = $this->searchArea($file, 'province_id', $province_id);
+        $regencies = [];
+
+        foreach($data as $key => $regency) {
+            $regencies[] = [
+                'id' => $file[$regency]['id'],
+                'name' => $file[$regency]['name'],
+            ];
+        }
+
+        return response()->json($regencies);
+    }
+
+    public function searchDistricts($regency_id) {
+        $file = $this->openJsonFile('districts');
+        $data = $this->searchArea($file, 'regency_id', $regency_id);
+        $districts = [];
+
+        foreach($data as $key => $district) {
+            $districts[] = [
+                'id' => $file[$district]['id'],
+                'name' => $file[$district]['name'],
+            ];
+        }
+
+        return response()->json($districts);
+    }
+
+    public function searchVillages($district_id) {
+        $file = $this->openJsonFile('villages');
+        $data = $this->searchArea($file, 'district_id', $district_id);
+        $villages = [];
+
+        foreach($data as $key => $village) {
+            $villages[] = [
+                'id' => $file[$village]['id'],
+                'name' => $file[$village]['name'],
+            ];
+        }
+
+        return response()->json($villages);
+    }
+
+
+    public function index()
+    {
+        $file = $this->openJsonFile('provinces');
+        $provinces = [];
+        foreach($file as $key => $province) {
+            $provinces[] = [
+                'id' => $province['id'],
+                'name' => $province['name'],
+            ];
+        }
+        return view('landing.shop-cart.index')->with([
+            'provinces' => $provinces
+        ]);
     }
 }

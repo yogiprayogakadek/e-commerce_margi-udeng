@@ -37,6 +37,9 @@ Route::namespace('Landing')->group(function() {
             Route::get('/remove-item/{cart_id}', 'removeItem')->name('remove.item');
             Route::post('/checkout', 'checkout')->name('checkout');
             Route::post('/payment-checking', 'paymentChecking')->name('payment.checking');
+            Route::get('/regency/{province_id}', 'searchRegencies')->name('search.regency');
+            Route::get('/district/{regency_id}', 'searchDistricts')->name('search.district');
+            Route::get('/village/{regency_id}', 'searchVillages')->name('search.village');
         });
 
     Route::controller(AccountController::class)

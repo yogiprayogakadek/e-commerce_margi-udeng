@@ -54,24 +54,32 @@ class CartController extends Controller
                         'title' => 'Gagal',
                     ]);
                 } else {
-                    \Cart::session($user_id)->add([
-                        'id' => $cart_id,
-                        'name' => $produk->nama,
-                        'price' => $payload[$key]['harga'],
-                        'quantity' => $request->qty,
-                        'attributes' => [
-                            'size' => $request->size,
-                            'foto' => $payload[$key]['foto']
-                        ],
-                        'associatedModel' => $produk
-                    ]);
+                    if($payload[$key]['stok'] >= $request->qty) {
+                        \Cart::session($user_id)->add([
+                            'id' => $cart_id,
+                            'name' => $produk->nama,
+                            'price' => $payload[$key]['harga'],
+                            'quantity' => $request->qty,
+                            'attributes' => [
+                                'size' => $request->size,
+                                'foto' => $payload[$key]['foto']
+                            ],
+                            'associatedModel' => $produk
+                        ]);
 
-                    return response()->json([
-                        'status' => 'success',
-                        'message' => 'Produk berhasil ditambahkan ke keranjang',
-                        'title' => 'Berhasil',
-                        'cartTotal' => count(cart())
-                    ]);
+                        return response()->json([
+                            'status' => 'success',
+                            'message' => 'Produk berhasil ditambahkan ke keranjang',
+                            'title' => 'Berhasil',
+                            'cartTotal' => count(cart())
+                        ]);
+                    } else {
+                        return response()->json([
+                            'status' => 'info',
+                            'message' => 'Stok tidak mencukupi',
+                            'title' => 'Info',
+                        ]);
+                    }
                 }
             }
         } catch (\Exception $e) {

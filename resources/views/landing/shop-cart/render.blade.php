@@ -20,7 +20,8 @@
                                 @forelse (cart() as $cart)
                                     <tr>
                                         <td class="product-thumbnail">
-                                            <a href="{{ route('landing.post.index', $cart->associatedModel['id']) }}"><img
+                                            <a
+                                                href="{{ route('landing.post.index', $cart->associatedModel['id']) }}"><img
                                                     class="w-100" src="{{ asset($cart->attributes['foto']) }}"
                                                     alt="Image" width="85" height="85"></a>
                                         </td>
@@ -41,14 +42,17 @@
                                             </div>
                                         </td>
                                         <td class="product-total">
-                                            <span>{{ toRupiah($cart->quantity * $cart->price) }}</span></td>
+                                            <span>{{ toRupiah($cart->quantity * $cart->price) }}</span>
+                                        </td>
                                         <td class="product-remove"><a href="javascript:void(0);" class="remove-item"
                                                 data-id="{{ $cart->id }}"><i class="fa fa-trash-o"></i></a></td>
                                     </tr>
                                 @empty
-                                <tr>
-                                    <td colspan="7" class="text-center"><h3>Tidak ada produk</h3></td>
-                                </tr>
+                                    <tr>
+                                        <td colspan="7" class="text-center">
+                                            <h3>Tidak ada produk</h3>
+                                        </td>
+                                    </tr>
                                 @endforelse
                             </tbody>
                         </table>
@@ -56,7 +60,8 @@
                 </div>
                 <div class="cart-shiping-update-wrapper">
                     <div class="cart-shiping-btn continure-btn">
-                        <a class="btn btn-link" href="{{ route('landing.index') }}"><i class="fa fa-angle-left"></i>
+                        <a class="btn btn-link" href="{{ route('landing.index') }}"><i
+                                class="fa fa-angle-left"></i>
                             Back To Shop</a>
                     </div>
                 </div>
@@ -65,51 +70,62 @@
             </div>
         </div>
         @if (count(cart()) > 0)
-        <div class="row">
-            <div class="col-md-12 col-lg-8">
-                <div class="cart-calculate-discount-wrap mb-40">
-                    <h4>Calculate shipping </h4>
-                    <div class="calculate-discount-content">
-                        <div class="select-style">
-                            <select class="select-active">
-                                <option>Bangladesh</option>
-                                <option>Bahrain</option>
-                                <option>Azerbaijan</option>
-                                <option>Barbados</option>
-                                <option>Barbados</option>
-                            </select>
+            <div class="row">
+                {{-- <div class="col-md-12 col-lg-8">
+                    <div class="form-group">
+                        <select name="provinces" id="provinces" class="form-control" style="width: 100%; height: 100%">
+                            <option value="OP">OP</option>
+                        </select>
+                    </div>
+                </div> --}}
+                <div class="col-md-12 col-lg-8">
+                    <div class="cart-calculate-discount-wrap mb-40">
+                        <h4>Calculate shipping </h4>
+                        <div class="calculate-discount-content">
+                            <div class="select-style">
+                                <select class="form-control provinces js-states" id="provinces" name="provinces"
+                                    style="width: 100%;">
+                                    <option></option>
+                                    @foreach ($provinces as $item)
+                                        <option value="{{ $item['id'] }}">{{ $item['name'] }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="select-style">
+                                <select class="form-control regencies js-states" id="regencies" name="regencies"
+                                    style="width: 100%;"></select>
+                            </div>
+                            <div class="select-style">
+                                <select class="form-control districts js-states" id="districts" name="districts"
+                                    style="width: 100%;"></select>
+                            </div>
+                            <div class="select-style">
+                                <select class="form-control villages js-states" id="villages" name="villages"
+                                    style="width: 100%;"></select>
+                            </div>
+                            <div class="input-style mb-6">
+                                <input type="text" placeholder="Kode POS" name="kode_pos" id="kode-pos" hidden>
+                            </div>
+                            <div class="input-style">
+                                <input type="text" placeholder="Alamat lengkap" id="alamat" name="alamat"
+                                    hidden>
+                            </div>
                         </div>
-                        <div class="select-style">
-                            <select class="select-active">
-                                <option>State / County</option>
-                                <option>Bahrain</option>
-                                <option>Azerbaijan</option>
-                                <option>Barbados</option>
-                                <option>Barbados</option>
-                            </select>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-4">
+                    <div class="grand-total-wrap mt-10 mt-lg-0">
+                        <div class="grand-total-content">
+                            <div class="grand-total">
+                                <h4>Total <span>{{ cartSubTotal() }}</span></h4>
+                            </div>
                         </div>
-                        <div class="input-style">
-                            <input type="text" placeholder="Town / City">
-                        </div>
-                        <div class="input-style mb-6">
-                            <input type="text" placeholder="Postcode / ZIP">
+                        <div class="grand-total-btn">
+                            <a class="btn btn-link checkout" href="javascript:void(0)">Proceed to checkout</a>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-md-12 col-lg-4">
-                <div class="grand-total-wrap mt-10 mt-lg-0">
-                    <div class="grand-total-content">
-                        <div class="grand-total">
-                            <h4>Total <span>{{ cartSubTotal() }}</span></h4>
-                        </div>
-                    </div>
-                    <div class="grand-total-btn">
-                        <a class="btn btn-link btn-checkout" href="javascript:void(0)">Proceed to checkout</a>
-                    </div>
-                </div>
-            </div>
-        </div>
         @endif
     </div>
 </section>

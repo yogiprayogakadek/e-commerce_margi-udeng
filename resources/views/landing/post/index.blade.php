@@ -31,8 +31,7 @@
                         <div class="swiper single-product-thumb-slider">
                             <div class="swiper-wrapper">
                                 @foreach ($data['foto'] as $image)
-                                    <a class="lightbox-image swiper-slide" data-fancybox="gallery"
-                                        href="{{ asset($image) }}">
+                                    <a class="lightbox-image swiper-slide" data-fancybox="gallery" href="{{ asset($image) }}">
                                         <img src="{{ asset($image) }}" width="640" height="530" alt="Image">
                                         <span class="badges">New</span>
                                     </a>
@@ -93,12 +92,26 @@
                         <div class="product-details-pro-qty">
                             <h4>QTY :</h4>
                             <div class="pro-qty">
-                                <input type="text" title="Quantity" value="1" min="1" name="qty">
+                                <input type="text" title="Quantity" value="1" min="1" name="qty"
+                                    class="qty" autocomplete="off">
                             </div>
                         </div>
-                        <div class="product-details-price"></div>
+                        <div class="product-details-pro-qty">
+                            <h4>Stok :</h4>
+                            <h2 class="stok" id="stok">0</h2>
+                            {{-- <input type="text" name="stok" id="stok" value="0" class="form-control"> --}}
+                        </div>
+                        <div class="product-details-pro-qty">
+                            <h4>Harga :</h4>
+                            <h2 class="harga" id="harga">0</h2>
+                        </div>
+                        <div class="product-details-pro-qty">
+                            <h4>Total :</h4>
+                            <h2 class="total" id="total">0</h2>
+                        </div>
+                        {{-- <div class="product-details-price"></div> --}}
                         <div class="product-details-action">
-                            <button type="button" class="product-action-btn add-button"
+                            <button type="button" disabled class="product-action-btn add-button"
                                 data-auth="{{ Auth::check() == true ? 'logged' : 'not-logged' }}">Add to cart</button>
                             {{-- <button type="button" class="product-action-wishlist" data-bs-toggle="modal" data-bs-target="#action-WishlistModal">
                                 <i class="fa fa-heart"></i>
@@ -258,15 +271,76 @@
                     produk_id: produk_id
                 },
                 success: function(response) {
+                    $('.stok').text(response.stok)
+                    $('.add-button').removeAttr('disabled');
                     localStorage.setItem('produk_id', produk_id);
                     localStorage.setItem('size', size);
                     localStorage.setItem('harga', response.harga);
-                    $(".product-details-price").text(response.harga);
+                    $(".harga").text(response.harga);
+                    $(".total").text(response.harga);
+                    $(".qty").val(1);
+                    // $(".product-details-price").text(response.harga);
                 },
                 error: function(error) {
                     console.log("Error", error);
                 },
             });
+        });
+
+        $('body').on('click', '.inc, .dec', function() {
+            let stok = $('.stok').text();
+            let size = localStorage.getItem('size');
+            let qty = $('input[name="qty"]')
+            if (!size) {
+                qty.val(1);
+                Swal.fire('Info', 'Silahkan pilih size terlebih dahulu', 'info');
+                $('.add-button').attr('disabled', true);
+                return false;
+            }
+
+            if (qty.val() > parseInt(stok)) {
+                // console.log(qty.val(), stok)
+                //set qty same with stok
+                qty.val(stok);
+                $(".total").text(convertToRupiah(qty.val() * parseInt($('.harga').text().replace(/\D/g, ''))));
+                Swal.fire('Info', 'Stok tidak mencukupi', 'info');
+                $('.add-button').attr('disabled', true);
+            } else {
+                $(".total").text(convertToRupiah(qty.val() * parseInt($('.harga').text().replace(/\D/g, ''))));
+                $('.add-button').removeAttr('disabled');
+            }
+        });
+
+        $('body').on('change', '.qty', function() {
+            let stok = $('.stok').text();
+            let size = localStorage.getItem('size');
+            let qty = $('input[name="qty"]');
+
+            $(".qty").inputFilter(function(value) {
+                return /^\d*$/.test(value); // Allow digits only, using a RegExp
+            }, "");
+
+            if (!size) {
+                qty.val(1);
+                Swal.fire('Info', 'Silahkan pilih size terlebih dahulu', 'info');
+                $('.add-button').attr('disabled', true);
+                return false;
+            }
+
+            if (qty.val() > parseInt(stok)) {
+                // console.log(qty.val(), stok)
+                //set qty same with stok
+                qty.val(stok);
+                $(".total").text(convertToRupiah(qty.val() * parseInt($('.harga').text().replace(/\D/g, ''))));
+                Swal.fire('Info', 'Stok tidak mencukupi', 'info');
+                $('.add-button').attr('disabled', true);
+            } else if(qty.val() <= 0) {
+                $(".total").text($('.harga').text());
+                qty.val(1)
+            } else {
+                $(".total").text(convertToRupiah(qty.val() * parseInt($('.harga').text().replace(/\D/g, ''))));
+                $('.add-button').removeAttr('disabled');
+            }
         });
 
         $('body').on('click', '.add-button', function() {
