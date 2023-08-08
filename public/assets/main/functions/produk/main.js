@@ -212,7 +212,7 @@ $(document).ready(function () {
 
     $("body").on("click", ".btn-print", function () {
         Swal.fire({
-            title: "Cetak data buku?",
+            title: "Cetak data produk?",
             text: "Laporan akan dicetak",
             icon: "success",
             showCancelButton: true,
@@ -226,7 +226,7 @@ $(document).ready(function () {
                 var options = {
                     mode: mode,
                     popClose: close,
-                    popTitle: "LaporanDataBuku",
+                    popTitle: "LaporanDataProduk",
                     popOrient: "landscape",
                 };
                 $.ajax({
@@ -235,7 +235,7 @@ $(document).ready(function () {
                     dataType: "json",
                     success: function (response) {
                         document.title =
-                            "PT. PANUDUH ATMA WARAS | Distribusi Buku - Print" +
+                            "E-Commerce Margi Udeng | Pakaian Adat Bali - Print" +
                             new Date().toJSON().slice(0, 10).replace(/-/g, "/");
                         $(response.data)
                             .find("div.printableArea")

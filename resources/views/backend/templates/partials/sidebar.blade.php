@@ -28,6 +28,12 @@
                         <span key="t-book">Produk</span>
                     </a>
                 </li>
+                <li>
+                    <a href="{{route('order.index')}}" class="waves-effect {{Request::is('/order') ? 'active' : '' }}">
+                        <i class="bx bx-book-open"></i>
+                        <span key="t-book">Order</span>
+                    </a>
+                </li>
                 {{-- @can('direktur')
                 <li>
                     <a href="{{route('pengguna.index')}}" class="waves-effect {{Request::is('/pengguna') ? 'active' : '' }}">

@@ -1,7 +1,7 @@
 function getData() {
     $.ajax({
         type: "get",
-        url: "/pengguna/render",
+        url: "/order/render",
         dataType: "json",
         success: function (response) {
             $(".render").html(response.data);
@@ -15,10 +15,47 @@ function getData() {
 $(document).ready(function () {
     getData();
 
-    // print data
+    $("body").on("click", ".detail-order", function () {
+        let order_id = $(this).data("id");
+
+        $("#modal").modal("show");
+
+        $("#tableDetail tbody").empty();
+        $.get("/account/detail-order/" + order_id, function (result) {
+            $.each(result.data, function (index, value) {
+                let list =
+                    "<tr>" +
+                    "<td>" +
+                    (index + 1) +
+                    "</td>" +
+                    "<td>" +
+                    value.nama +
+                    "</td>" +
+                    "<td>" +
+                    value.harga +
+                    "</td>" +
+                    "<td>" +
+                    value.size +
+                    "</td>" +
+                    "<td>" +
+                    value.kuantitas +
+                    "</td>" +
+                    '<td class="subtotal text-end">' +
+                    value.subtotal +
+                    "</td>" +
+                    "</tr>";
+
+                $("#tableDetail tbody").append(list);
+            });
+            $(".total").html(
+                '<p class="text-end"><strong>' + result.total + "</strong></p>"
+            );
+        });
+    });
+
     $("body").on("click", ".btn-print", function () {
         Swal.fire({
-            title: "Cetak data pengguna?",
+            title: "Cetak data order?",
             text: "Laporan akan dicetak",
             icon: "success",
             showCancelButton: true,
@@ -32,12 +69,12 @@ $(document).ready(function () {
                 var options = {
                     mode: mode,
                     popClose: close,
-                    popTitle: "LaporanDataPengguna",
-                    popOrient: "landscape",
+                    popTitle: "LaporanDataOrder",
+                    // popOrient: "landscape",
                 };
                 $.ajax({
                     type: "GET",
-                    url: "/pengguna/print/",
+                    url: "/order/print/",
                     dataType: "json",
                     success: function (response) {
                         document.title =
@@ -49,29 +86,6 @@ $(document).ready(function () {
                     },
                 });
             }
-        });
-    });
-
-    $("body").on("change", ".status", function () {
-        let status = $("select[name=status] option").filter(":selected").val();
-        let user_id = $(this).data("id");
-
-        $.ajaxSetup({
-            headers: {
-                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
-            },
-        });
-        $.ajax({
-            type: "POST",
-            url: "/pengguna/update",
-            data: {
-                id: user_id,
-                status: status,
-            },
-            success: function (response) {
-                getData();
-                Swal.fire(response.title, response.message, response.status);
-            },
         });
     });
 });

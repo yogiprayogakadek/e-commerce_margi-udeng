@@ -362,4 +362,15 @@ class ProdukController extends Controller
             ]);
         }
     }
+
+    public function print()
+    {
+        $produk = Produk::all();
+
+        $view = [
+            'data' => view('backend.produk.print', compact('produk'))->render(),
+        ];
+
+        return response()->json($view);
+    }
 }

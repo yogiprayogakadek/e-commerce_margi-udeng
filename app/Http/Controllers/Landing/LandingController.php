@@ -20,12 +20,9 @@ class LandingController extends Controller
 
     public function index()
     {
-        // $produk = Produk::where('status', true)->where('data', '!=', null)->get();
-        // return view('landing.index', compact('produk'));
-
         $produk = Produk::where('status', true)
             ->where('data', '!=', null)
-            ->get();
+            ->paginate(1);
 
         $allPrices = collect();
 
@@ -37,6 +34,45 @@ class LandingController extends Controller
             $item->harga_terendah = $harga->min();
             $item->harga_tertinggi = $harga->max();
         });
+
+        if(request()->ajax()) {
+            return response()->json([
+                'html' => view('landing.pagination.index', compact('produk'))->render(),
+                'pagination' => (string) $produk->links(),
+            ]);
+        }
+
+
+        return view('landing.index', compact('produk'));
+    }
+
+    public function byCategory($kategori_id)
+    {
+        $produk = Produk::where('status', true)
+            ->where('data', '!=', null)
+            ->when($kategori_id != 'all', function($query) use($kategori_id) {
+                return $query->where('kategori_id', $kategori_id);
+            })
+            ->paginate(1);
+
+        $allPrices = collect();
+
+        $produk->each(function ($item) use ($allPrices) {
+            $data = json_decode($item->data, true);
+            $harga = collect($data)->pluck('harga');
+            $allPrices = $allPrices->merge($harga);
+
+            $item->harga_terendah = $harga->min();
+            $item->harga_tertinggi = $harga->max();
+        });
+
+
+        if(request()->ajax()) {
+            return response()->json([
+                'html' => view('landing.pagination.index', compact('produk'))->render(),
+                'pagination' => (string) $produk->links(),
+            ]);
+        }
 
 
         return view('landing.index', compact('produk'));
@@ -70,7 +106,7 @@ class LandingController extends Controller
 
     public function post($produk_id)
     {
-        $produk = Produk::find($produk_id);
+        $produk = Produk::findOrFail($produk_id);
         $size = [];
         $harga = [];
         $foto = [

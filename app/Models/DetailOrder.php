@@ -25,4 +25,9 @@ class DetailOrder extends Model
             $model->id = str_replace('-','',Uuid::uuid4()->getHex());
         });
     }
+
+    public function produk()
+    {
+        return $this->hasOne(Produk::class, 'id', 'produk_id');
+    }
 }

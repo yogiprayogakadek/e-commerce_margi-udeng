@@ -13,6 +13,18 @@
                 <div class="header-navigation">
                     <ul class="main-nav">
                         <li><a href="{{route('landing.index')}}">Home</a></li>
+                        @if (count(kategori()) > 0)
+                        <li class="has-submenu">
+                            <a href="javascript:void(0)">Kategori</a>
+                            <ul class="submenu-nav">
+                                @foreach (kategori() as $key => $value)
+                                <li>
+                                    <a href="{{route('landing.by.category', $key)}}">{{$value}}</a>
+                                </li>
+                                @endforeach
+                            </ul>
+                        </li>
+                        @endif
                         @auth
                         <li><a href="{{route('shopping.cart.index')}}">Keranjang Belanja</a></li>
                         <li><a href="{{route('account.index')}}">Akun</a></li>

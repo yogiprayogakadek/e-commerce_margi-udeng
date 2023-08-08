@@ -9,7 +9,7 @@
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
     <meta content="Themesbrand" name="author" />
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{asset('assets/main/images/web/favicon.ico')}}">
+    <link rel="shortcut icon" href="{{asset('assets/landing/images/favicon.png')}}">
 
     <!-- owl.carousel css -->
     <link rel="stylesheet" href="{{asset('assets/main/libs/owl.carousel/assets/main/owl.carousel.min.css')}}">
@@ -25,7 +25,7 @@
     <link rel="stylesheet" href="{{asset('assets/main/libs/sweetalert2/sweetalert2.min.css')}}">
     <style>
         body {
-            background-image: url('https://c4.wallpaperflare.com/wallpaper/479/101/113/germany-saxony-gorlitz-hall-historical-literature-wallpaper-preview.jpg');
+            background-image: url('https://e1.pxfuel.com/desktop-wallpaper/581/154/desktop-wallpaper-backgrounds-for-login-page-login-page.jpg');
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
@@ -49,7 +49,7 @@
                                     </div>
                                 </div>
                                 <div class="col-5 align-self-end">
-                                    <img src="{{asset('assets/main/images/web/logo.png')}}" alt="" class="img-fluid">
+                                    {{-- <img src="{{asset('assets/landing/images/favicon.png')}}" alt="" class="img-fluid"> --}}
                                 </div>
                             </div>
                         </div>
@@ -58,7 +58,7 @@
                                 <a href="{{route('login')}}" class="auth-logo-light">
                                     <div class="avatar-md profile-user-wid mb-4">
                                         <span class="avatar-title rounded-circle bg-light">
-                                            <img src="{{asset('assets/main/images/web/logo.png')}}" alt="" class="rounded-circle" height="34">
+                                            <img src="{{asset('assets/landing/images/favicon.png')}}" alt="" class="rounded-circle" height="34">
                                         </span>
                                     </div>
                                 </a>
@@ -66,7 +66,7 @@
                                 <a href="{{route('login')}}" class="auth-logo-dark">
                                     <div class="avatar-md profile-user-wid mb-4">
                                         <span class="avatar-title rounded-circle bg-light">
-                                            <img src="{{asset('assets/main/images/web/logo.png')}}" alt="" class="rounded-circle" height="34">
+                                            <img src="{{asset('assets/landing/images/favicon.png')}}" alt="" class="rounded-circle" height="34">
                                         </span>
                                     </div>
                                 </a>

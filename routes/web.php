@@ -9,6 +9,7 @@ Route::namespace('Landing')->group(function() {
         // ->middleware('httpHeader')
         ->group(function() {
             Route::get('/', 'index')->name('index');
+            Route::get('/by-cat/{kategori_id}', 'byCategory')->name('by.category');
             Route::get('/detail-produk/{produk_id}', 'detailProduk')->name('detail.produk');
 
             Route::prefix('post')
@@ -60,6 +61,9 @@ Route::middleware(['auth', 'checkRole:admin'])->namespace('Main')->group(functio
         ->as('dashboard.')
         ->group(function() {
             Route::get('/', 'index')->name('index');
+            Route::post('/chart', 'chart')->name('chart');
+            Route::post('/chart-by-kategori', 'chartByKategori')->name('chart.kategori');
+            Route::post('/chart-pendapatan', 'chartPendapatan')->name('chart.pendapatan');
     });
 
     Route::controller(KategoriController::class)
@@ -97,6 +101,16 @@ Route::middleware(['auth', 'checkRole:admin'])->namespace('Main')->group(functio
                     Route::post('/update', 'dataUpdate')->name('update');
                     Route::post('/delete', 'dataDelete')->name('delete');
                 });
+        });
+
+        Route::controller(OrderController::class)
+        ->prefix('order')
+        ->as('order.')
+        ->group(function () {
+            Route::get('', 'index')->name('index');
+            Route::get('/render', 'render')->name('render');
+            Route::get('/create', 'create')->name('create');
+            Route::get('/print', 'print')->name('print');
         });
 });
 

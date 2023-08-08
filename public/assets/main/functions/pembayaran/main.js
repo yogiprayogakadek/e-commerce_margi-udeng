@@ -129,7 +129,7 @@ $(document).ready(function () {
                     dataType: "json",
                     success: function (response) {
                         document.title =
-                            "PT. PANUDUH ATMA WARAS | Distribusi Buku - Print" +
+                            "E-Commerce Margi Udeng | Pakaian Adat Bali - Print" +
                             new Date().toJSON().slice(0, 10).replace(/-/g, "/");
                         $(response.data)
                             .find("div.printableArea")

@@ -1,10 +1,12 @@
 <?php
 
+use App\Models\Kategori;
 use App\Models\Order;
 use App\Models\Pembayaran;
 
-function toRupiah($data) {
-    return 'Rp' . number_format($data, 0, '.','.');
+function toRupiah($data)
+{
+    return 'Rp' . number_format($data, 0, '.', '.');
 }
 
 function cart()
@@ -39,4 +41,21 @@ function orderByUser()
     $order = Order::with('pembayaran')->where('user_id', auth()->user()->id)->get();
 
     return $order;
+}
+
+function searchForSize($size, $array)
+{
+    foreach ($array as $key => $value) {
+        if ($value['size'] === $size) {
+            return $key;
+        }
+    }
+    return null;
+}
+
+function kategori()
+{
+    $kategori = Kategori::where('status', true)->pluck('nama', 'id')->prepend('Semuanya', 'all')->toArray();
+
+    return $kategori;
 }

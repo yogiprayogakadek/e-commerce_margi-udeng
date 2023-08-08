@@ -94,15 +94,15 @@
         <div class="container">
             <div class="swiper banner-slider-container">
                 <div class="swiper-wrapper">
-                    <a href="shop.html" class="swiper-slide product-banner-item">
+                    <a href="{{route('landing.by.category', 'all')}}" class="swiper-slide product-banner-item">
                         <img class="icon" src="{{ asset('assets/landing/images/shop/banner/kebaya.png') }}" width="370"
                             height="294" alt="Image-HasTech">
                     </a>
-                    <a href="shop.html" class="swiper-slide product-banner-item">
+                    <a href="{{route('landing.by.category', 'all')}}" class="swiper-slide product-banner-item">
                         <img class="icon" src="{{ asset('assets/landing/images/shop/banner/saputan.png') }}" width="370"
                             height="294" alt="Image-HasTech">
                     </a>
-                    <a href="shop.html" class="swiper-slide product-banner-item">
+                    <a href="{{route('landing.by.category', 'all')}}" class="swiper-slide product-banner-item">
                         <img class="icon" src="{{ asset('assets/landing/images/shop/banner/sandal.jpg') }}" width="370"
                             height="294" alt="Image-HasTech">
                     </a>
@@ -118,34 +118,25 @@
         <div class="container">
             <div class="section-title text-center">
                 <h2 class="title">Best Products</h2>
-                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                <p>Pilih produk terbaik kamu</p>
             </div>
             <div class="row mb-n6">
-                @forelse ($produk as $key => $value)
-                    <div class="col-sm-6 col-lg-4 mb-6">
+                <div class="pagination-product">
+                    @include('landing.pagination.index', ['produk' => $produk])
+                </div>
+                {{-- @forelse ($produk as $key => $value)
+                    <div class="col-sm-6 col-lg-4 mb-6"> --}}
                         <!--== Start Product Item ==-->
-                        <div class="product-item product-item-border">
+                        {{-- <div class="product-item product-item-border">
                             <a class="product-thumb" href="{{ route('landing.post.index', $value->id) }}">
                                 <img src="{{ asset($value->foto) }}" width="300" height="286" alt="Image-HasTech">
-                            </a>
+                            </a> --}}
                             {{-- <span class="badges">New</span> --}}
-                            <div class="product-action">
+                            {{-- <div class="product-action">
                                 <button type="button" class="product-action-btn action-btn-quick-view btn-modal"
                                     data-id="{{ $value->id }}">
                                     <i class="fa fa-expand"></i>
                                 </button>
-                                {{-- <button type="button" class="product-action-btn action-btn-quick-view"
-                                data-bs-toggle="modal" data-bs-target="#action-QuickViewModal1">
-                                <i class="fa fa-expand"></i>
-                            </button> --}}
-                                {{-- <button type="button" class="product-action-btn action-btn-cart"
-                                data-bs-toggle="modal" data-bs-target="#action-CartAddModal">
-                                <i class="fa fa-shopping-cart"></i>
-                            </button>
-                            <button type="button" class="product-action-btn action-btn-compare"
-                                data-bs-toggle="modal" data-bs-target="#action-CompareModal">
-                                <i class="fa fa-exchange"></i>
-                            </button> --}}
                             </div>
                             <div class="product-info">
                                 <h4 class="title"><a href="{{ route('landing.post.index', $value->id) }}">{{ $value->nama }}</a>
@@ -157,14 +148,18 @@
                                 </button>
                             </a>
                             </div>
-                        </div>
+                        </div> --}}
                         <!--== End prPduct Item ==-->
-                    </div>
-                @empty
+                    {{-- </div> --}}
+                {{-- @empty
                     <div class="section-title text-center">
                         <h2 class="title">Belum ada produk</h2>
                     </div>
-                @endforelse
+                @endforelse --}}
+
+                {{-- <div class="d-flex justify-content-center pagination-container">
+                {!! $produk->links() !!}
+                </div> --}}
             </div>
         </div>
     </section>
@@ -294,6 +289,21 @@
         $('body').on('click', '.detail-button', function() {
             let produk_id = localStorage.getItem('produk_id')
             window.location = '/post/' + produk_id
+        });
+
+        $(document).on('click', '.pagination a', function(event) {
+            event.preventDefault();
+            let url = $(this).attr('href');
+
+            $.ajax({
+                url: url,
+                success: function(data) {
+                    $('.pagination-product').html(data.html);
+
+                    // Update pagination links container
+                    // $('.pagination-container').html($(data).find('.pagination'));
+                }
+            });
         });
     </script>
 @endpush
