@@ -42,19 +42,23 @@
                                             aria-controls="dashboad" aria-selected="true">Dashboard</button>
                                         <button class="nav-link" id="orders-tab" data-bs-toggle="tab"
                                             data-bs-target="#orders" type="button" role="tab" aria-controls="orders"
-                                            aria-selected="false"> Orders</button>
+                                            aria-selected="false"> Order</button>
+                                        <button class="nav-link" id="payment-tab" data-bs-toggle="tab"
+                                            data-bs-target="#payment" type="button" role="tab" aria-controls="payment"
+                                            aria-selected="false"> Pembayaran</button>
                                         <button class="nav-link" id="account-info-tab" data-bs-toggle="tab"
                                             data-bs-target="#account-info" type="button" role="tab"
-                                            aria-controls="account-info" aria-selected="false">Account Details</button>
+                                            aria-controls="account-info" aria-selected="false">Detail Akun</button>
                                         <button class="nav-link" id="change-password-tab" data-bs-toggle="tab"
                                             data-bs-target="#change-password" type="button" role="tab"
-                                            aria-controls="change-password" aria-selected="false">Change Password</button>
-                                        <button class="nav-link" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                                            aria-controls="change-password" aria-selected="false">Ganti Password</button>
+                                        <button class="nav-link"
+                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                                             type="button">Logout</button>
 
-                                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                                @csrf
-                                            </form>
+                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                            @csrf
+                                        </form>
                                     </div>
                                 </nav>
                             </div>
@@ -118,7 +122,48 @@
                                                             </tr>
                                                         @empty
                                                             <tr>
-                                                                <td colspan="5" class="text-center">Belum ada order</td>
+                                                                <td colspan="5" class="text-center">Belum ada order
+                                                                </td>
+                                                            </tr>
+                                                        @endforelse
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane fade" id="payment" role="tabpanel"
+                                        aria-labelledby="payment-tab">
+                                        <div class="myaccount-content">
+                                            <h3>Payment</h3>
+                                            <div class="myaccount-table table-responsive text-center">
+                                                <table class="table table-bordered" id="tableData">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>Order Code</th>
+                                                            <th>Status Pembayaran</th>
+                                                            <th>Total</th>
+                                                            <th>Tanggal Pemesanan</th>
+                                                            <th>Aksi</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @forelse (paymentByUser() as $pembayaran)
+                                                            <tr>
+                                                                <td>{{ $pembayaran->order->order_code }}</td>
+                                                                <td>{{ $pembayaran->status }}</td>
+                                                                <td>{{ toRupiah($pembayaran->total) }}</td>
+                                                                <td>{{ date_format(date_create($pembayaran->order->created_at), 'd M Y') }}
+                                                                </td>
+                                                                <td>
+                                                                    {!! $pembayaran->status == 'Unpaid'
+                                                                        ? '<a href="javascript:void(0)" class="check-btn sqr-btn btn-payment" data-id=' . $pembayaran->id . '>Bayar</a>'
+                                                                        : 'Lunas' !!}
+                                                                </td>
+                                                            </tr>
+                                                        @empty
+                                                            <tr>
+                                                                <td colspan="5" class="text-center">Belum ada order
+                                                                </td>
                                                             </tr>
                                                         @endforelse
                                                     </tbody>
@@ -265,6 +310,9 @@
     <script type="text/javascript" src="{{ asset('vendor/jsvalidation/js/jsvalidation.js') }}"></script>
     {!! JsValidator::formRequest('App\Http\Requests\AccountRequest', '#formAccount') !!}
     {!! JsValidator::formRequest('App\Http\Requests\PasswordRequest', '#formPassword') !!}
+    <script src="https://cdn.jsdelivr.net/npm/gasparesganga-jquery-loading-overlay@2.1.7/dist/loadingoverlay.min.js">
+    </script>
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-WLa4T_aeiQfLdfyC"></script>
     <script>
         $('#tableData').DataTable({
             language: {
@@ -289,6 +337,23 @@
         });
 
         $(document).ready(function() {
+            function screenLoading() {
+                $.LoadingOverlay("show", {
+                    image: "",
+                    progress: true
+                });
+                var count = 0;
+                var interval = setInterval(function() {
+                    if (count >= 100) {
+                        clearInterval(interval);
+                        $.LoadingOverlay("hide");
+                        return;
+                    }
+                    count += 10;
+                    $.LoadingOverlay("progress", count);
+                }, 200);
+            }
+
             $('body').on('click', '.btn-detail', function() {
                 let order_id = $(this).data('id');
 
@@ -310,6 +375,53 @@
                     });
                     $('.total').html('<p class="text-end"><strong>' + result.total +
                         '</strong></p>')
+                });
+            })
+
+            $('body').on('click', '.btn-payment', function() {
+                $.ajaxSetup({
+                    headers: {
+                        "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content"),
+                    },
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "/account/payment",
+                    data: {
+                        payment_id: $(this).data('id')
+                    },
+                    success: function(response) {
+                        screenLoading();
+                        console.log(response)
+                        if (response.status == 'success') {
+                            snap.pay(response.midtransToken, {
+                                onSuccess: function(result) {
+                                    Swal.fire('Berhasil', 'Pembayaran berhasil', 'success');
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 1000);
+                                },
+                                onPending: function(result) {
+                                    Swal.fire('Info', 'Menunggu pembayaran', 'info');
+                                    // console.log(result)
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 1000);
+                                },
+                                onError: function(result) {
+                                    Swal.fire('Gagal', 'Pembayaran gagal', 'error');
+                                    // console.log(result)
+                                    setTimeout(() => {
+                                        location.reload();
+                                    }, 1000);
+                                }
+                            });
+                        }
+                        // Swal.fire(response.title, response.message, response.status);
+                        // setTimeout(() => {
+                        //     location.reload();
+                        // }, 1000);
+                    }
                 });
             })
 

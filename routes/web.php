@@ -51,6 +51,7 @@ Route::namespace('Landing')->group(function() {
             Route::get('/detail-order/{order_id}', 'detailOrder')->name('detail.order');
             Route::post('/update', 'update')->name('update');
             Route::post('/update-password', 'updatePassword')->name('update.password');
+            Route::post('/payment', 'payment')->name('payment');
         });
 });
 

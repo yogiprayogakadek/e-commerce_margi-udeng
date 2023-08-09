@@ -42,6 +42,13 @@ function orderByUser()
 
     return $order;
 }
+function paymentByUser()
+{
+    $order = Order::where('user_id', auth()->user()->id)->pluck('id')->toArray();
+    $payment = Pembayaran::with('order')->whereIn('order_id', $order)->get();
+
+    return $payment;
+}
 
 function searchForSize($size, $array)
 {

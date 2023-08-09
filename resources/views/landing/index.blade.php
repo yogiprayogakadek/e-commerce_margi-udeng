@@ -76,11 +76,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="hero-social">
+                        {{-- <div class="hero-social">
                             <a href="https://www.facebook.com/" target="_blank" rel="noopener">fb</a>
                             <a href="https://www.twitter.com/" target="_blank" rel="noopener">tw</a>
                             <a href="https://www.linkedin.com/" target="_blank" rel="noopener">in</a>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -120,10 +120,10 @@
                 <h2 class="title">Best Products</h2>
                 <p>Pilih produk terbaik kamu</p>
             </div>
-            <div class="row mb-n6">
-                <div class="pagination-product">
+            <div class="row mb-n6 pagination-product">
+                {{-- <div class="pagination-product"> --}}
                     @include('landing.pagination.index', ['produk' => $produk])
-                </div>
+                {{-- </div> --}}
                 {{-- @forelse ($produk as $key => $value)
                     <div class="col-sm-6 col-lg-4 mb-6"> --}}
                         <!--== Start Product Item ==-->

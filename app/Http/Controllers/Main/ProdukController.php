@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Main;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProdukAtributRequest;
+use App\Http\Requests\ProdukRequest;
 use App\Models\Kategori;
 use App\Models\Produk;
 use Illuminate\Http\Request;
@@ -79,7 +81,7 @@ class ProdukController extends Controller
         return response()->json($view);
     }
 
-    public function store(Request $request)
+    public function store(ProdukRequest $request)
     {
         try {
             $data = [
@@ -128,7 +130,7 @@ class ProdukController extends Controller
         return response()->json($view);
     }
 
-    public function update(Request $request)
+    public function update(ProdukRequest $request)
     {
         try {
             $data = [
@@ -220,7 +222,7 @@ class ProdukController extends Controller
         return response()->json($view);
     }
 
-    public function dataStore(Request $request)
+    public function dataStore(ProdukAtributRequest $request)
     {
         try {
             $produk = Produk::find($request->produk_id);
@@ -296,7 +298,7 @@ class ProdukController extends Controller
         return response()->json($view);
     }
 
-    public function dataUpdate(Request $request)
+    public function dataUpdate(ProdukAtributRequest $request)
     {
         try {
             $produk = Produk::find($request->produk_id);
