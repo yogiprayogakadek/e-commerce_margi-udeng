@@ -32,7 +32,7 @@
                             </div>
                             <div class="col-12 col-sm-6">
                                 <div class="hero-slide-thumb">
-                                    <img src="{{ asset('assets/landing/images/slider/slider1.png') }}" width="555"
+                                    <img src="{{ asset('assets/landing/images/shop/banner/landing.png') }}" width="555"
                                         height="550" alt="Image">
                                 </div>
                             </div>
