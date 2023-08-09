@@ -22,7 +22,7 @@ class LandingController extends Controller
     {
         $produk = Produk::where('status', true)
             ->where('data', '!=', null)
-            ->paginate(2);
+            ->paginate(6);
 
         $allPrices = collect();
 
@@ -53,7 +53,7 @@ class LandingController extends Controller
             ->when($kategori_id != 'all', function($query) use($kategori_id) {
                 return $query->where('kategori_id', $kategori_id);
             })
-            ->paginate(2);
+            ->paginate(6);
 
         $allPrices = collect();
 
