@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProdukAtributRequest extends FormRequest
 {
@@ -24,6 +25,17 @@ class ProdukAtributRequest extends FormRequest
      */
     public function rules()
     {
+        // Define the custom rule directly in the rules method
+    Validator::extend('required_if_size_not_null', function ($attribute, $value, $parameters, $validator) {
+        // $parameters[0] is the name of the size field
+        $sizeField = $parameters[0];
+
+        // Get the value of the size field from the request data
+        $sizeFieldValue = $validator->getData()[$sizeField];
+
+        // Check if the size field is not null and the value is not empty
+        return !is_null($sizeFieldValue) && !empty($value);
+    });
         $rules = [
             'size' => 'required',
             'harga' => 'required',
@@ -37,7 +49,8 @@ class ProdukAtributRequest extends FormRequest
             ];
         } else {
             $rules += [
-                'status' => 'required',
+                // 'status' => 'nullabel',
+                'status' => 'required_if:size,value',
                 'foto' => 'nullable|image|mimes:jpeg,png,jpg|max:2048'
             ];
         }
